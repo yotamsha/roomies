@@ -40,6 +40,12 @@ angular.module('myApp.services')
             STAGE_HEIGHT : 700,
         }
         var basePath = "../../assets/images/furniture/";
+        // Drag is the best layer, dragged element is above everything else
+        var dragLayer = new PIXI.DisplayGroup(2, false);
+        var defaultLayer = new PIXI.DisplayGroup(-1, false);
+        // z-index = 0, sorting = true;
+        var floorLayer = new PIXI.DisplayGroup(1, false);
+        var _lastDraggedObject = null;
 
         function createStageItem(key, image, width, height, x, y) {
             var texture = PIXI.Texture.fromImage(basePath + image);
@@ -81,6 +87,7 @@ angular.module('myApp.services')
             stageItem.position.y = y;
             stageItem.imageKey = image;
             stageItem.key = key;
+            // addShadow(stageItem);
             // add it to the stage
             _stage.addChild(stageItem);
             _stageItems.push({
@@ -101,6 +108,21 @@ angular.module('myApp.services')
             _renderer.render(_stage);
         }
 
+        function addShadow(obj) {
+            var blurFilter = new PIXI.filters.BlurFilter();
+            blurFilter.blur = 0.8;
+
+            var gr = new PIXI.Graphics();
+            gr.beginFill(0x0, 1);
+            //yes , I know bunny size, I'm sorry for this hack
+            var scale = 1.1;
+            gr.drawRect(obj.width/2, obj.width/2, obj.width, obj.width);
+            gr.endFill();
+            gr.filters = [blurFilter];
+
+            // gr.displayGroup = shadowLayer;
+            obj.addChild(gr);
+        }
         /*        function onthisDropped(event){
          var resizing = false;
          if (resizing){
@@ -138,6 +160,9 @@ angular.module('myApp.services')
 
          }*/
 
+        function isInFloorArea(object){
+            return (object.position.y > Consts.FLOOR_Y_THRESHOLD);
+        }
         function onDragStart(event) {
             // store a reference to the data
             // the reason for this is because of multitouch
@@ -145,6 +170,7 @@ angular.module('myApp.services')
             this.data = event.data;
             this.alpha = 0.5;
             this.dragging = true;
+            this.oldGroup = this.displayGroup;
 
         }
 
@@ -153,16 +179,22 @@ angular.module('myApp.services')
             this.alpha = 1;
             this.dragging = false;
 
+            _lastDraggedObject = this;
             // set the interaction data to null
             this.data = null;
             var distance = this.position.y - Consts.FLOOR_Y_THRESHOLD;
-            if (distance > 0) { // the object was dragged towards the floor
+            if (isInFloorArea(this)) { // the object was dragged towards the floor
+                console.log("In floor!!!!!");
                 var scale = Math.ceil((distance + 100) / 100) ;
                 this.width = this.metaData.originalWidth * (1 + scale / 10);
                 this.height = this.metaData.originalHeight * (1 + scale / 10);
+                this.displayGroup = floorLayer;
+
             } else { // object is back at the background
                 this.width = this.metaData.originalWidth;
                 this.height = this.metaData.originalHeight;
+                this.displayGroup = defaultLayer;
+
             }
             $rootScope.$broadcast('STAGE_OBJECT_CHANGED',{
                 key: this.key,
@@ -176,6 +208,15 @@ angular.module('myApp.services')
 
         function onDragMove() {
             if (this.dragging) {
+                if (_lastDraggedObject && _lastDraggedObject !== this ){ // remove last dragged object from top.
+                    _lastDraggedObject.displayGroup = this.oldGroup;
+                }
+                if(!isInFloorArea){
+                    this.displayGroup = defaultLayer;
+                } else {
+                    this.displayGroup = floorLayer;
+                }
+
                 var newPosition = this.data.getLocalPosition(this.parent);
                 this.position.x = newPosition.x;
                 this.position.y = newPosition.y;
@@ -189,6 +230,9 @@ angular.module('myApp.services')
 
                 // create the root of the scene graph
                 _stage = new PIXI.Container();
+                //specify display list component
+                _stage.displayList = new PIXI.DisplayList();
+
                 if (roomData){
                     for (var key in roomData.items) {
 

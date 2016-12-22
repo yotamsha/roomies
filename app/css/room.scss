@@ -1,0 +1,72 @@
+.room-container {
+  margin-left: auto;
+  margin-right: auto;
+  /*
+  margin-top: 100px;
+  */
+  width:1000px;
+  height: 800px;
+  position: relative;
+  .back-wall {
+    position: absolute;
+    background-color: #ffffff;
+    width: 800px;
+    height: 600px;
+    right: 100px;
+    left: 100px;
+    top:0px;
+
+  }
+  .left-side-wall {
+    position: absolute;
+    background-color: #f7f6f2;
+    position: absolute;
+    left: 0px;
+    width: 100px;
+    height: 100%;
+  }
+  .right-side-wall {
+    position: absolute;
+    background-color: #f7f6f2;
+    right: 0px;
+    width: 100px;
+    height: 100%;
+
+  }
+  .floor {
+    position: absolute;
+    bottom: 100px;
+    left: -200px;
+    border-bottom: 150px solid rgb(214, 205, 150);
+    border-left: 300px solid transparent;
+    border-right: 300px solid transparent;
+    height: 0px;
+    width: 800px;
+  }
+  .roof {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-top: 50px solid #ffffff;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    height: 0px;
+    width: 800px;
+    /*
+    z-index: 1;
+    */
+  }
+
+}
+.stage {
+
+  z-index: 1;
+  background-color: rgba(255, 0, 255, 0);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0px;
+  left: 100px;
+  height: 700px;
+  width: 1300px;
+}

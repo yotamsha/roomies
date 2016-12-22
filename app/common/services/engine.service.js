@@ -161,7 +161,8 @@ angular.module('myApp.services')
          }*/
 
         function isInFloorArea(object){
-            return (object.position.y > Consts.FLOOR_Y_THRESHOLD);
+            var OFFSET = 35; // y offset is needed to make sure the item bottom is tested against the threshold.
+            return (object.position.y + (object.height / 2) - OFFSET > Consts.FLOOR_Y_THRESHOLD);
         }
         function onDragStart(event) {
             // store a reference to the data

@@ -1,4 +1,8 @@
+<stage-renderer class="stage" room-data="roomData">
+
+</stage-renderer>
 <div class="room-container">
+
 
 <!--    <div class="roof">
 
@@ -13,9 +17,17 @@
 
     </div>-->
     <div class="floor">
+        <a class="nav-link" href="#" ng-click="ctrl.scrollToClass('.items-section')"> &darr; Stuff </a>
+    </div>
 
+</div>
+<div class="items-section">
+    <div class="items-picker">
+        <a href="#" class="nav-link" ng-click="ctrl.scrollToClass('.room-container')"> &uarr; Go Back Up </a>
+
+        <div ng-repeat="item in ctrl.availableItems" class="item">
+            <img ng-src="{{ctrl.storageBasePath  + item.path}}" />
+        </div>
     </div>
 </div>
-<stage-renderer class="stage" room-data="roomData">
 
-</stage-renderer>

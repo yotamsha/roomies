@@ -1,6 +1,15 @@
 /* app css stylesheet */
+/*@font-face {
+  font-family: 'Ampersand';
+  src : url('../assets/fonts/ampersand.ttf') format('truetype'), !* Safari, Android, iOS *!
+}*/
 body {
-  background-color: #f7f6f2; }
+  background-color: #f7f6f2;
+  font-family: 'Chathura', sans-serif; }
+
+.nav-link {
+  font-size: 45px;
+  text-decoration: none; }
 
 .room-container {
   margin-left: auto;
@@ -11,6 +20,12 @@ body {
   width: 1000px;
   height: 800px;
   position: relative; }
+  .room-container .nav-link {
+    position: absolute;
+    bottom: -150px;
+    left: -140px;
+    z-index: 2;
+    color: #ffffff; }
   .room-container .back-wall {
     position: absolute;
     background-color: #ffffff;
@@ -36,7 +51,7 @@ body {
     position: absolute;
     bottom: 100px;
     left: -200px;
-    border-bottom: 150px solid #d6cd96;
+    border-bottom: 150px solid #4cb050;
     border-left: 300px solid transparent;
     border-right: 300px solid transparent;
     height: 0px;
@@ -53,6 +68,26 @@ body {
     /*
     z-index: 1;
     */ }
+
+.items-section {
+  position: relative;
+  width: 100%;
+  background-color: #ffffff; }
+  .items-section .items-picker {
+    display: table;
+    width: 800px;
+    padding: 50px;
+    margin: auto; }
+    .items-section .items-picker .nav-link {
+      position: absolute;
+      top: 80px;
+      left: 180px;
+      color: #000000; }
+    .items-section .items-picker .item img {
+      height: 100px;
+      width: 100px;
+      float: left;
+      margin: 10px; }
 
 .stage {
   z-index: 1;

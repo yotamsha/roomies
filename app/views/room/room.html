@@ -3,7 +3,6 @@
 </stage-renderer>
 <div class="room-container">
 
-
 <!--    <div class="roof">
 
     </div>-->
@@ -26,7 +25,7 @@
         <a href="#" class="nav-link" ng-click="ctrl.scrollToClass('.room-container')"> &uarr; Go Back Up </a>
 
         <div ng-repeat="item in ctrl.availableItems" class="item">
-            <img ng-src="{{ctrl.storageBasePath  + item.path}}" />
+            <img ng-src="{{ctrl.storageBasePath  + item.path}}" ng-click="ctrl.addItemToRoom(item)"/>
         </div>
     </div>
 </div>

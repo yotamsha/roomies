@@ -5,7 +5,8 @@
 }*/
 body {
   background-color: #f7f6f2;
-  font-family: 'Chathura', sans-serif; }
+  font-family: 'Chathura', sans-serif;
+  font-size: 24px; }
 
 .nav-link {
   font-size: 45px;

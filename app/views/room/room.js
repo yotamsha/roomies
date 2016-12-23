@@ -19,13 +19,21 @@ angular.module('myApp.room', ['ngRoute'])
                 ctrl.availableItems = RoomService.getItemsInventory();
                 ctrl.roomId = window.localStorage.roomId;
                 if (window.localStorage && window.localStorage.roomId) {
+                    console.log("Loading data for room ID: ", window.localStorage.roomId);
                     RoomService.getRoom(window.localStorage.roomId).then(function (data) {
                         $scope.roomData = data;
                         $scope.$apply();
                         console.log("RoomData loaded: ", data);
                     });
                 } else {
-                    // $scope.roomData = null;
+                    // create a room in the server.
+                    var newRoomRef = Rooms.push();
+                    newRoomRef.set({items: "null"});
+                    ctrl.roomId = newRoomRef.key;
+                    ctrl.roomRef = newRoomRef;
+                    localStorage.setItem('roomId', newRoomRef.key);
+                    console.log("Room Created: ", newRoomRef.key);
+
                 }
                 _initListeners();
             }
@@ -43,7 +51,7 @@ angular.module('myApp.room', ['ngRoute'])
                     // Triggered when a new user enters.
                     // Room should be created for the new user.
                     // room ID should be saved in user session (localStorage or Firebase eventually)
-                    var newRoomRef = Rooms.push();
+/*                    var newRoomRef = Rooms.push();
                     newRoomRef.set({items: {}});
                     // TODO replace this with two separate calls, one for adding an item, and one for adding the item to the room.
                     ctrl.roomItemsRef = firebase.database().ref('roomies/rooms/' + newRoomRef.key + '/items');
@@ -51,12 +59,18 @@ angular.module('myApp.room', ['ngRoute'])
                     for (var i = 0; i < data.items.length; i++) {
                         var itemRef = ctrl.roomItemsRef.push(); // add item to room
                         itemRef.set(data.items[i]);
-                    }
-                    ctrl.roomId = newRoomRef.key;
+                    }*/
+/*                    ctrl.roomId = newRoomRef.key;
                     ctrl.roomRef = newRoomRef;
-                    localStorage.setItem('roomId', newRoomRef.key);
+                    localStorage.setItem('roomId', newRoomRef.key);*/
                     console.log('STAGE_CREATED', ctrl.roomId);
                 });
+
+/*                $rootScope.$on('OBJECT_PICKED', function (e, data) {
+                    // Add item on server
+                    console.log('OBJECT_PICKED', data);
+                });*/
+
 
                 // SERVER EVENTS //
 
@@ -75,11 +89,15 @@ angular.module('myApp.room', ['ngRoute'])
                 $rootScope.$on('ROOM_OBJECT_CHANGED', function (e, data) {
                     console.log('ROOM_OBJECT_CHANGED', data);
                 });
-
                 Rooms.on("value", function (snapshot) {
+                    console.log('ROOM_OBJECT_CHANGED', snapshot.val());
+                    var roomsData = snapshot.val();
                     // We should listen to when a child is changed, if it has the same ID as the one we are looking at
                     // then the change should immediately appear in the room.
-                    $rootScope.$broadcast('ROOM_OBJECT_CHANGED', snapshot.val());
+                    $scope.roomData = roomsData[ctrl.roomId];
+                    if(!$scope.$$phase) { // check that no digest is taking place.
+                        $scope.$apply();
+                    }
 
                 });
             }
@@ -88,6 +106,16 @@ angular.module('myApp.room', ['ngRoute'])
                 var $target = $(className);
                 console.log("$target.offset().top: " + $target.offset().top);
                 $("body").animate({scrollTop: $target.offset().top}, 600); // scroll to discussion top
+            };
+            ctrl.addItemToRoom = function(item) {
+                var newItem = EngineService.generatedNewItem(item);
+                // createStageItem(data.key, data.path, 100, 100, Consts.STAGE_WIDTH / 2, Consts.STAGE_HEIGHT / 2);
+                RoomService.addItem(ctrl.roomId, newItem).then(function(data){ // Add item on server
+                    //console.log(data);
+                    //EngineService.addItem(data);// Add item to stage
+
+                });
+
             };
             
             _init();

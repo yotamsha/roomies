@@ -244,11 +244,19 @@ angular.module('myApp.room')
                     return snapshot.val();
                 });
             },
+            
             setItem : function(roomId, itemKey, data){
                 delete data.key;
                 var itemRef = firebase.database().ref('roomies/rooms/' + roomId + '/items/' + itemKey);
                 return itemRef.set(data);
             },
+            
+            addItem : function(roomId, data){
+                var itemsRef = firebase.database().ref('roomies/rooms/' + roomId + '/items');
+                var newItemRef = itemsRef.push();
+                return newItemRef.set(data);
+            },
+            
             getItemsInventory : function(){
                 return _images;
             }

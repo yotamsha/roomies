@@ -4,7 +4,7 @@
 angular.module('myApp.services')
 
     .service('EngineService', ['$rootScope', function ($rootScope) {
-        var _stage, _renderer, _stageItems = [];
+        var _stage, _renderer, _stageItems = {}, _rendered = false;
         var _images = [
             {"path": "air-conditioner-1.png"},
             {"path": "armchair.png"},
@@ -252,59 +252,6 @@ angular.module('myApp.services')
         var floorLayer = new PIXI.DisplayGroup(1, false);
         var _lastDraggedObject = null;
 
-        function createStageItem(key, image, width, height, x, y) {
-            var texture = PIXI.Texture.fromImage(basePath + image);
-
-            // create our little stageItem friend..
-            var stageItem = new PIXI.Sprite(texture);
-            stageItem.metaData = {
-                originalWidth: width,
-                originalHeight: height
-            };
-            // enable the stageItem to be interactive... this will allow it to respond to mouse and touch events
-            stageItem.interactive = true;
-
-            // this button mode will mean the hand cursor appears when you roll over the stageItem with your mouse
-            stageItem.buttonMode = true;
-
-            // center the stageItem's anchor point
-            stageItem.anchor.set(0.5);
-            stageItem.width = width;
-            stageItem.height = height;
-            /*
-             stageItem.scale.set(scale)
-             */
-            // setup events
-            stageItem
-            // events for drag start
-                .on('mousedown', onDragStart)
-                .on('touchstart', onDragStart)
-                // events for drag end
-                .on('mouseup', onDragEnd)
-                .on('mouseupoutside', onDragEnd)
-                .on('touchend', onDragEnd)
-                .on('touchendoutside', onDragEnd)
-                // events for drag move
-                .on('mousemove', onDragMove)
-                .on('touchmove', onDragMove);
-            // move the sprite to its designated position
-            stageItem.position.x = x;
-            stageItem.position.y = y;
-            stageItem.imageKey = image;
-            stageItem.key = key;
-            // addShadow(stageItem);
-            // add it to the stage
-            _stage.addChild(stageItem);
-            _stageItems.push({
-                key: stageItem.key,
-                x: stageItem.position.x,
-                y: stageItem.position.y,
-                width: stageItem.width,
-                height: stageItem.height,
-                image: stageItem.imageKey,
-            });
-        }
-
         function animate() {
 
             requestAnimationFrame(animate);
@@ -410,7 +357,7 @@ angular.module('myApp.services')
                 width: this.width,
                 x: this.position.x,
                 y: this.position.y,
-                image: this.imageKey
+                path: this.path
             });
         }
 
@@ -431,29 +378,96 @@ angular.module('myApp.services')
             }
         }
 
-        var Service = {
-            init: function ($element, roomData) {
-                _renderer = PIXI.autoDetectRenderer(Consts.STAGE_WIDTH, Consts.STAGE_HEIGHT, {transparent: true});
-                $element.append(_renderer.view);
+        function getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min;
+        }
 
-                // create the root of the scene graph
-                _stage = new PIXI.Container();
-                //specify display list component
-                _stage.displayList = new PIXI.DisplayList();
+        function createStageItem(key, item) {
+            var texture = PIXI.Texture.fromImage(basePath + item.path);
 
-                if (roomData) {
-                    for (var key in roomData.items) {
+            // create our little stageItem friend..
+            var stageItem = new PIXI.Sprite(texture);
+            stageItem.metaData = {
+                originalWidth: item.width,
+                originalHeight: item.height
+            };
+            // enable the stageItem to be interactive... this will allow it to respond to mouse and touch events
+            stageItem.interactive = true;
 
-                        var item = roomData.items[key];
-                        var image = item.image || 'plant-2.png';
-                        var texture = PIXI.Texture.fromImage(basePath + image);
-                        var width = item.width || Consts.ITEM_WIDTH;
-                        var height = item.height || Consts.ITEM_HEIGHT;
-                        createStageItem(key, image, width, height, item.x, item.y);
+            // this button mode will mean the hand cursor appears when you roll over the stageItem with your mouse
+            stageItem.buttonMode = true;
+
+            // center the stageItem's anchor point
+            stageItem.anchor.set(0.5);
+            stageItem.width = item.width;
+            stageItem.height = item.height;
+            /*
+             stageItem.scale.set(scale)
+             */
+            // setup events
+            stageItem
+            // events for drag start
+                .on('mousedown', onDragStart)
+                .on('touchstart', onDragStart)
+                // events for drag end
+                .on('mouseup', onDragEnd)
+                .on('mouseupoutside', onDragEnd)
+                .on('touchend', onDragEnd)
+                .on('touchendoutside', onDragEnd)
+                // events for drag move
+                .on('mousemove', onDragMove)
+                .on('touchmove', onDragMove);
+            // move the sprite to its designated position
+            stageItem.position.x = item.x;
+            stageItem.position.y = item.y;
+            stageItem.path = item.path;
+            stageItem.key = key;
+            // addShadow(stageItem);
+            // add it to the stage
+            _stage.addChild(stageItem);
+            _stageItems[key] = stageItem;
+        }
+
+
+        function updateStageItem(stageItem, newState) {
+            stageItem.width = newState.width;
+            stageItem.height = newState.height;
+            stageItem.position.x = newState.x;
+            stageItem.position.y = newState.y;
+        }
+
+        function updateStageState(newData){
+            if (newData && newData.items) {
+                for (var key in newData.items) {
+                    var item = newData.items[key];
+                    if (!_stageItems[key]){
+                        console.log("creating item: " + key);
+                        createStageItem(key, item);
+                    } else {
+                        console.log("updating item: " + key);
+                        updateStageItem(_stageItems[key], item);
                     }
+                }
+            }
+        }
+        var Service = {
+
+            redrawChanges: function ($element, roomData) {
+                //
+                if (!_rendered){
+                    _rendered = true;
+                    _renderer = PIXI.autoDetectRenderer(Consts.STAGE_WIDTH, Consts.STAGE_HEIGHT, {transparent: true} );
+                    $element.append(_renderer.view);
+                    // create the root of the scene graph
+                    _stage = new PIXI.Container();
+                    //specify display list component
+                    _stage.displayList = new PIXI.DisplayList();
                     requestAnimationFrame(animate);
-                } else {
-                    // create a texture from an image path
+                }
+                updateStageState(roomData);
+
+
+                // create a texture from an image path
 /*                    var len = _images.length;
                     for (var i = 0; i < len; i++) {
                         var image = _images.pop()
@@ -466,11 +480,25 @@ angular.module('myApp.services')
                     $rootScope.$broadcast('STAGE_CREATED', {
                         items: _stageItems
                     });*/
+
+
+
+            },
+
+            generatedNewItem : function(item){
+                return {
+                    path : item.path,
+                    height : Consts.ITEM_HEIGHT,
+                    width : Consts.ITEM_WIDTH,
+                    x : (Consts.STAGE_WIDTH / 2) + getRandomArbitrary(-200, 200) ,
+                    y : (Consts.STAGE_HEIGHT / 2) + getRandomArbitrary(-200, 200)
                 }
-
-
-            }
+            },
+            
+/*            addItem : function(data){
+                createStageItem(data.key, {path : data.path, width: 100, height:100, x: Consts.STAGE_WIDTH / 2, y:Consts.STAGE_HEIGHT / 2});
+            }*/
         };
-
+        
         return Service;
     }]);

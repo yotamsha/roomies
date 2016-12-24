@@ -18,6 +18,26 @@ angular.module('myApp.room', ['ngRoute'])
             var Rooms = firebase.database().ref('roomies/rooms');
             ctrl.storageBasePath = "../../assets/images/furniture/";
             ctrl.showRoomsPopupBox = false;
+            var defaultRoom = {
+                "items": {
+                    "1": {
+                        "height": 220.00000000000003,
+                        "path": "bookshelf-1.png",
+                        "width": 220.00000000000003,
+                        "x": 351.5,
+                        "y": 449
+                    },
+                    "2": {"height": 165, "path": "desk.png", "width": 165, "x": 610.5, "y": 473},
+                    "3": {"height": 275, "path": "library.png", "width": 275, "x": 911.5, "y": 438},
+                    "4": {"height": 100, "path": "lamp-3.png", "width": 100, "x": 1126.5, "y": 228},
+                    "5": {"height": 100, "path": "plant.png", "width": 100, "x": 457.5, "y": 198},
+                    "6": {"height": 100, "path": "plant-1.png", "width": 100, "x": 374.5, "y": 197},
+                    "7": {"height": 100, "path": "plant-2.png", "width": 100, "x": 650.5, "y": 198},
+                    "8": {"height": 100, "path": "plant-3.png", "width": 100, "x": 549.5, "y": 197},
+                    "9": {"height": 130, "path": "cactus-1.png", "width": 130, "x": 37.5, "y": 632},
+                    "10": {"height": 130, "path": "cactus-1.png", "width": 130, "x": 1239.5, "y": 630}
+                }
+            };
             function _init() {
                 ctrl.availableItems = RoomService.getItemsInventory();
                 ctrl.roomId = window.localStorage.roomId;
@@ -29,11 +49,13 @@ angular.module('myApp.room', ['ngRoute'])
                     RoomService.getRoom(window.localStorage.roomId).then(function (data) {
                         EngineService.redrawChanges($canvasElement, data);
                         console.log("RoomData loaded: ", data);
+                        ctrl.roomData = data;
+
                     });
                 } else {
                     // create a room in the server.
                     var newRoomRef = Rooms.push();
-                    newRoomRef.set({items: "null"});
+                    newRoomRef.set(defaultRoom);
                     ctrl.roomId = newRoomRef.key;
                     ctrl.roomRef = newRoomRef;
                     localStorage.setItem('roomId', newRoomRef.key);
@@ -130,7 +152,6 @@ angular.module('myApp.room', ['ngRoute'])
                 }
                 RoomService.getRoom(roomId).then(function (data) {
                     EngineService.redrawChanges($canvasElement, data, true);
-                    console.log("RoomData loaded: ", data);
                     ctrl.roomId = roomId;
                     ctrl.isRoomOwned = roomId === window.localStorage.roomId;
                     ctrl.showRoomsPopupBox = false;

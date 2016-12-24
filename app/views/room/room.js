@@ -23,6 +23,8 @@ angular.module('myApp.room', ['ngRoute'])
                 ctrl.roomId = window.localStorage.roomId;
                 ctrl.isRoomOwned = true;
                 if (window.localStorage && window.localStorage.roomId) {
+                    ctrl.userRoomId = window.localStorage.roomId;
+
                     console.log("Loading data for room ID: ", window.localStorage.roomId);
                     RoomService.getRoom(window.localStorage.roomId).then(function (data) {
                         EngineService.redrawChanges($canvasElement, data);
@@ -35,6 +37,7 @@ angular.module('myApp.room', ['ngRoute'])
                     ctrl.roomId = newRoomRef.key;
                     ctrl.roomRef = newRoomRef;
                     localStorage.setItem('roomId', newRoomRef.key);
+                    ctrl.userRoomId = newRoomRef.key;
                     console.log("Room Created: ", newRoomRef.key);
 
                 }

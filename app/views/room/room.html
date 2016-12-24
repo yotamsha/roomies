@@ -44,7 +44,7 @@
 &nbsp; &nbsp; &nbsp; Images are designed by Madebyoliver from Flaticon. Many Thanks!
 <div ng-if="ctrl.showRoomsPopupBox" ng-click="ctrl.showRoomsPopupBox = false" class="rooms-selection-container">
     <div class="rooms-selection" ng-click="$event.stopPropagation();">
-        <div ng-repeat="(key, value) in ctrl.rooms" class="room-item card" ng-class="{'active': key === ctrl.roomId}">
+        <div ng-repeat="(key, value) in ctrl.rooms" ng-if="ctrl.userRoomId !== key" class="room-item card" ng-class="{'active': key === ctrl.roomId}">
             <img src="../../assets/images/furniture/door-2.png" ng-click="ctrl.switchToRoom(key)"/>
         </div>
     </div>

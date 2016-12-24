@@ -6,9 +6,10 @@
 body {
   background-color: #f7f6f2;
   font-family: 'Chathura', sans-serif;
-  font-size: 34px; }
+  font-size: 28px; }
   body a {
-    color: #4CB050; }
+    color: #4CB050;
+    cursor: pointer; }
   body .card {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
@@ -31,25 +32,13 @@ body {
   .room-container .hello-message {
     position: absolute;
     top: 20px;
-    left: -200px;
+    left: -165px;
     height: 300px;
     width: 257px;
     line-height: 27px;
     z-index: 2; }
     .room-container .hello-message a {
       cursor: pointer; }
-  .room-container .rooms-list {
-    position: absolute;
-    top: 0px;
-    right: -170px;
-    line-height: 35px;
-    margin: 20px;
-    padding: 0px; }
-    .room-container .rooms-list ul {
-      list-style-type: none;
-      padding: 0px; }
-      .room-container .rooms-list ul li {
-        padding: 0px; }
   .room-container .nav-link {
     position: absolute;
     bottom: -150px;
@@ -101,17 +90,17 @@ body {
 
 .items-section {
   position: relative;
-  width: 100%;
-  background-color: #ffffff; }
+  margin: auto;
+  width: 800px; }
   .items-section .items-picker {
     display: table;
-    width: 800px;
     padding: 50px;
-    margin: auto; }
+    width: 100%; }
     .items-section .items-picker .nav-link {
       position: absolute;
       top: 80px;
-      left: 180px;
+      left: -160px;
+      float: left;
       color: #000000; }
     .items-section .items-picker .item img {
       height: 100px;
@@ -120,16 +109,20 @@ body {
       margin: 10px;
       cursor: pointer; }
 
-.stage {
-  z-index: 1;
-  background-color: rgba(255, 0, 255, 0);
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0px;
-  left: 100px;
-  height: 700px;
-  width: 1300px; }
+.stage-container {
+  position: relative;
+  margin: auto;
+  width: 1300px;
+  height: 700px; }
+  .stage-container .stage {
+    z-index: 1;
+    background-color: rgba(255, 0, 255, 0);
+    position: absolute;
+    /*  position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0px;
+      left: 100px;*/ }
 
 .rooms-selection-container {
   position: fixed;

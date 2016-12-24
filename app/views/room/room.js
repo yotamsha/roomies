@@ -6,12 +6,13 @@ angular.module('myApp.room', ['ngRoute'])
         $routeProvider.when('/room', {
             templateUrl: 'views/room/room.html',
             controller: 'RoomCtrl',
-            controllerAs: 'ctrl'
+            controllerAs: 'ctrl',
+            reloadOnSearch : false
         });
     }])
 
-    .controller('RoomCtrl', ['$scope', 'EngineService', '$firebaseObject', '$rootScope', 'RoomService','$document',
-        function ($scope, EngineService, $firebaseObject, $rootScope, RoomService, $document) {
+    .controller('RoomCtrl', ['$scope', 'EngineService', '$firebaseObject', '$rootScope', 'RoomService','$anchorScroll','$location',
+        function ($scope, EngineService, $firebaseObject, $rootScope, RoomService, $anchorScroll, $location) {
             var ctrl = this;
             var $canvasElement = angular.element(document.getElementsByClassName('stage'));
             var Rooms = firebase.database().ref('roomies/rooms');
@@ -25,8 +26,6 @@ angular.module('myApp.room', ['ngRoute'])
                     console.log("Loading data for room ID: ", window.localStorage.roomId);
                     RoomService.getRoom(window.localStorage.roomId).then(function (data) {
                         EngineService.redrawChanges($canvasElement, data);
-                        /*                        $scope.roomData = data;
-                                                $scope.$apply();*/
                         console.log("RoomData loaded: ", data);
                     });
                 } else {
@@ -110,10 +109,9 @@ angular.module('myApp.room', ['ngRoute'])
                 });
             }
             
-            ctrl.scrollToClass = function(className){
-                var $target = $(className);
-                console.log("$target.offset().top: " + $target.offset().top);
-                $("body").animate({scrollTop: $target.offset().top}, 600); // scroll to discussion top
+            ctrl.scrollToElement = function(hash){
+                $location.hash(hash);
+                $anchorScroll();
             };
             ctrl.addItemToRoom = function(item) {
                 var newItem = EngineService.generatedNewItem(item);
@@ -123,16 +121,17 @@ angular.module('myApp.room', ['ngRoute'])
             ctrl.showRoomsPopup = function(){
                 ctrl.showRoomsPopupBox = true;
             };
-            ctrl.switchToRoom = function(roomId){
+            ctrl.switchToRoom = function(roomId, switchToMyRoom){
+                if (!roomId || switchToMyRoom){
+                    roomId = window.localStorage.roomId;
+                }
                 RoomService.getRoom(roomId).then(function (data) {
-                    // $scope.roomData = data;
                     EngineService.redrawChanges($canvasElement, data, true);
-                    // $scope.$apply();
                     console.log("RoomData loaded: ", data);
                     ctrl.roomId = roomId;
                     ctrl.isRoomOwned = roomId === window.localStorage.roomId;
                     ctrl.showRoomsPopupBox = false;
-
+                    $scope.$apply();
                 });
 
             };

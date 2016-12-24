@@ -1,36 +1,40 @@
-<div class="stage">
+<div class="stage-container">
+    <div class="stage">
 
-</div>
-<div class="room-container">
-    <div class="hello-message" >
-        <p ng-if="ctrl.isRoomOwned">
-            Hey there! <br/>
-            Welcome to your shiny new room. <br/>
-            Feel free to dress it up or mess it up.<br/>
+    </div>
+    <div id="top" class="room-container">
 
-            Oh, yes, and don't forget to say hi to your <a ng-click="ctrl.showRoomsPopup()">Roomies!</a>.<br/>
-            <br/>
-        </p>
-        <div ng-if="ctrl.isRoomOwned">Set Room Name: {{ctrl.roomId}}</div>
-        <div ng-if="!ctrl.isRoomOwned">
-            Room: {{ctrl.roomId}}<br/><br/>
-            <a ng-click="ctrl.showRoomsPopup()">See Others</a>
+        <div class="hello-message" >
+            <p ng-if="ctrl.isRoomOwned">
+                Hey there! <br/>
+                Welcome to your shiny new room. <br/>
+                Feel free to dress it up or mess it up.<br/>
+
+                Oh, yes, and don't forget to say hi to your <a ng-click="ctrl.showRoomsPopup()">Roomies!</a>.<br/>
+                <br/>
+            </p>
+            <div ng-if="ctrl.isRoomOwned">Set Room Name: {{ctrl.roomId}}</div>
+            <div ng-if="!ctrl.isRoomOwned">
+                Room: {{ctrl.roomId}}<br/>
+                <a ng-click="ctrl.showRoomsPopup()">See Others</a><br/>
+                <a ng-click="ctrl.switchToRoom(null, true)">&larr; Back to My Room</a><br/>
+
+            </div>
 
         </div>
 
-    </div>
+        <div class="back-wall">
 
-    <div class="back-wall">
+        </div>
+        <div class="floor">
+            <a class="nav-link" ng-click="ctrl.scrollToElement('items')"> &darr; Stuff </a>
+        </div>
 
     </div>
-    <div class="floor">
-        <a class="nav-link" href="#" ng-click="ctrl.scrollToClass('.items-section')"> &darr; Stuff </a>
-    </div>
-
 </div>
 <div class="items-section">
-    <div class="items-picker">
-        <a href="#" class="nav-link" ng-click="ctrl.scrollToClass('.room-container')"> &uarr; Go Back Up </a>
+    <div id="items" class="items-picker">
+        <a class="nav-link" ng-click="ctrl.scrollToElement('top')"> &uarr; Go Back Up </a>
 
         <div ng-repeat="item in ctrl.availableItems" class="item">
             <img ng-src="{{ctrl.storageBasePath  + item.path}}" ng-click="ctrl.addItemToRoom(item)"/>

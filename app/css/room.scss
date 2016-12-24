@@ -6,29 +6,13 @@
   .hello-message {
     position: absolute;
     top: 20px;
-    left: -200px;
+    left: -165px;
     height: 300px;
     width: 257px;
     line-height: 27px;
     z-index: 2;
     a {
       cursor: pointer;
-    }
-
-  }
-  .rooms-list {
-    position: absolute;
-    top: 0px;
-    right: -170px;
-    line-height: 35px;
-    margin: 20px;
-    padding: 0px;
-    ul {
-      list-style-type: none;
-      padding: 0px;
-      li {
-        padding: 0px;
-      }
     }
 
   }
@@ -100,17 +84,17 @@
 }
 .items-section {
   position: relative;
-  width: 100%;
-  background-color: #ffffff;
+  margin: auto;
+  width: 800px;
   .items-picker {
     display: table;
-    width: 800px;
     padding: 50px;
-    margin: auto;
+    width: 100%;
     .nav-link {
       position: absolute;
-      top:80px;
-      left: 180px;
+      top: 80px;
+      left: -160px;
+      float: left;
       color: #000000;
     }
     .item {
@@ -124,17 +108,22 @@
     }
   }
 }
-.stage {
-
-  z-index: 1;
-  background-color: rgba(255, 0, 255, 0);
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0px;
-  left: 100px;
-  height: 700px;
+.stage-container {
+  position: relative;
+  margin: auto;
   width: 1300px;
+  height: 700px;
+  .stage {
+
+    z-index: 1;
+    background-color: rgba(255, 0, 255, 0);
+   position: absolute;
+    /*  position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0px;
+      left: 100px;*/
+  }
 }
 .rooms-selection-container {
   position: fixed;

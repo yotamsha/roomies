@@ -6,7 +6,14 @@
 body {
   background-color: #f7f6f2;
   font-family: 'Chathura', sans-serif;
-  font-size: 24px; }
+  font-size: 34px; }
+  body a {
+    color: #4CB050; }
+  body .card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+  body .card:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
 
 .nav-link {
   font-size: 45px;
@@ -21,6 +28,28 @@ body {
   width: 1000px;
   height: 800px;
   position: relative; }
+  .room-container .hello-message {
+    position: absolute;
+    top: 20px;
+    left: -200px;
+    height: 300px;
+    width: 257px;
+    line-height: 27px;
+    z-index: 2; }
+    .room-container .hello-message a {
+      cursor: pointer; }
+  .room-container .rooms-list {
+    position: absolute;
+    top: 0px;
+    right: -170px;
+    line-height: 35px;
+    margin: 20px;
+    padding: 0px; }
+    .room-container .rooms-list ul {
+      list-style-type: none;
+      padding: 0px; }
+      .room-container .rooms-list ul li {
+        padding: 0px; }
   .room-container .nav-link {
     position: absolute;
     bottom: -150px;
@@ -88,7 +117,8 @@ body {
       height: 100px;
       width: 100px;
       float: left;
-      margin: 10px; }
+      margin: 10px;
+      cursor: pointer; }
 
 .stage {
   z-index: 1;
@@ -100,6 +130,39 @@ body {
   left: 100px;
   height: 700px;
   width: 1300px; }
+
+.rooms-selection-container {
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.53); }
+  .rooms-selection-container .rooms-selection {
+    position: relative;
+    width: 665px;
+    margin: auto;
+    margin-top: 100px;
+    min-height: 300px;
+    max-height: 450px;
+    background-color: #ffffff;
+    z-index: 101;
+    box-shadow: 0px 3px 9px #333;
+    padding: 15px;
+    overflow-y: auto; }
+    .rooms-selection-container .rooms-selection .room-item {
+      height: 100px;
+      width: 100px;
+      float: left;
+      margin: 15px;
+      cursor: pointer;
+      padding: 15px; }
+      .rooms-selection-container .rooms-selection .room-item.active {
+        background-color: rgba(97, 184, 114, 0.65); }
+      .rooms-selection-container .rooms-selection .room-item img {
+        height: 100%;
+        width: 100%; }
 
 /*.menu {
   list-style: none;

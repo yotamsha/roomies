@@ -1,20 +1,28 @@
-<stage-renderer class="stage" room-data="roomData">
+<div class="stage">
 
-</stage-renderer>
+</div>
 <div class="room-container">
+    <div class="hello-message" >
+        <p ng-if="ctrl.isRoomOwned">
+            Hey there! <br/>
+            Welcome to your shiny new room. <br/>
+            Feel free to dress it up or mess it up.<br/>
 
-<!--    <div class="roof">
+            Oh, yes, and don't forget to say hi to your <a ng-click="ctrl.showRoomsPopup()">Roomies!</a>.<br/>
+            <br/>
+        </p>
+        <div ng-if="ctrl.isRoomOwned">Set Room Name: {{ctrl.roomId}}</div>
+        <div ng-if="!ctrl.isRoomOwned">
+            Room: {{ctrl.roomId}}<br/><br/>
+            <a ng-click="ctrl.showRoomsPopup()">See Others</a>
 
-    </div>-->
+        </div>
+
+    </div>
+
     <div class="back-wall">
 
     </div>
-<!--    <div class="left-side-wall">
-
-    </div>
-    <div class="right-side-wall">
-
-    </div>-->
     <div class="floor">
         <a class="nav-link" href="#" ng-click="ctrl.scrollToClass('.items-section')"> &darr; Stuff </a>
     </div>
@@ -29,4 +37,11 @@
         </div>
     </div>
 </div>
-
+&nbsp; &nbsp; &nbsp; Images are designed by Madebyoliver from Flaticon. Many Thanks!
+<div ng-if="ctrl.showRoomsPopupBox" ng-click="ctrl.showRoomsPopupBox = false" class="rooms-selection-container">
+    <div class="rooms-selection" ng-click="$event.stopPropagation();">
+        <div ng-repeat="(key, value) in ctrl.rooms" class="room-item card" ng-class="{'active': key === ctrl.roomId}">
+            <img src="../../assets/images/furniture/door-2.png" ng-click="ctrl.switchToRoom(key)"/>
+        </div>
+    </div>
+</div>

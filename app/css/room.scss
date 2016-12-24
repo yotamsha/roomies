@@ -3,6 +3,35 @@
     text-decoration: none;
 }
 .room-container {
+  .hello-message {
+    position: absolute;
+    top: 20px;
+    left: -200px;
+    height: 300px;
+    width: 257px;
+    line-height: 27px;
+    z-index: 2;
+    a {
+      cursor: pointer;
+    }
+
+  }
+  .rooms-list {
+    position: absolute;
+    top: 0px;
+    right: -170px;
+    line-height: 35px;
+    margin: 20px;
+    padding: 0px;
+    ul {
+      list-style-type: none;
+      padding: 0px;
+      li {
+        padding: 0px;
+      }
+    }
+
+  }
   .nav-link {
     position: absolute;
     bottom:-150px;
@@ -90,11 +119,11 @@
         width: 100px;
         float: left;
         margin: 10px;
+        cursor: pointer;
       }
     }
   }
 }
-
 .stage {
 
   z-index: 1;
@@ -106,4 +135,42 @@
   left: 100px;
   height: 700px;
   width: 1300px;
+}
+.rooms-selection-container {
+  position: fixed;
+  top:0px;
+  bottom: 0px;
+  right: 0px;
+  left:0px;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.53);
+  .rooms-selection {
+    position: relative;
+    width: 665px;
+    margin: auto;
+    margin-top: 100px;
+    min-height: 300px;
+    max-height: 450px;
+    background-color: #ffffff;
+    z-index: 101;
+    box-shadow: 0px 3px 9px #333;
+    padding: 15px;
+    overflow-y: auto;
+
+    .room-item {
+      height: 100px;
+      width: 100px;
+      float: left;
+      margin: 15px;
+      cursor: pointer;
+      padding: 15px;
+      &.active {
+        background-color: rgba(97, 184, 114, 0.65);
+      }
+      img {
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
 }

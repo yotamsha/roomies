@@ -11,7 +11,7 @@ angular.module('myApp.stage.stage-directive', [])
       var initialized = false;
       scope.$watch(attrs.roomData, function (roomData) {
         if (roomData !== undefined){
-          EngineService.redrawChanges(elm,roomData);
+          // EngineService.redrawChanges(elm,roomData);
           initialized = true;
         }
       });

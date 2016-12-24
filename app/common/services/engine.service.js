@@ -377,6 +377,12 @@ angular.module('myApp.services')
                 this.position.y = newPosition.y;
             }
         }
+        function onMouseOver(){
+            this.alpha = 0.5;
+        }
+        function onMouseOut(){
+            this.alpha = 1;
+        }
 
         function getRandomArbitrary(min, max) {
             return Math.random() * (max - min) + min;
@@ -416,7 +422,10 @@ angular.module('myApp.services')
                 .on('touchendoutside', onDragEnd)
                 // events for drag move
                 .on('mousemove', onDragMove)
-                .on('touchmove', onDragMove);
+                .on('touchmove', onDragMove)
+                .on('mouseover', onMouseOver)
+                .on('mouseout', onMouseOut)
+
             // move the sprite to its designated position
             stageItem.position.x = item.x;
             stageItem.position.y = item.y;
@@ -436,8 +445,14 @@ angular.module('myApp.services')
             stageItem.position.y = newState.y;
         }
 
-        function updateStageState(newData){
+        function updateStageState(newData, reset){
             if (newData && newData.items) {
+                if (reset){
+                    for (var i = _stage.children.length - 1; i >= 0; i--) {
+                        _stage.removeChild(_stage.children[i]);
+                    };
+                    _stageItems = {};
+                }
                 for (var key in newData.items) {
                     var item = newData.items[key];
                     if (!_stageItems[key]){
@@ -452,37 +467,20 @@ angular.module('myApp.services')
         }
         var Service = {
 
-            redrawChanges: function ($element, roomData) {
-                //
-                if (!_rendered){
-                    _rendered = true;
-                    _renderer = PIXI.autoDetectRenderer(Consts.STAGE_WIDTH, Consts.STAGE_HEIGHT, {transparent: true} );
-                    $element.append(_renderer.view);
-                    // create the root of the scene graph
-                    _stage = new PIXI.Container();
-                    //specify display list component
-                    _stage.displayList = new PIXI.DisplayList();
-                    requestAnimationFrame(animate);
-                }
-                updateStageState(roomData);
-
-
-                // create a texture from an image path
-/*                    var len = _images.length;
-                    for (var i = 0; i < len; i++) {
-                        var image = _images.pop()
-                        var width = image.width || Consts.ITEM_WIDTH;
-                        var height = image.height || Consts.ITEM_HEIGHT;
-                        createStageItem(null, image.path, width, height,
-                            Math.floor(Math.random() * Consts.STAGE_WIDTH), Math.floor(Math.random() * Consts.STAGE_HEIGHT));
+            redrawChanges: function ($element, roomData, reset) {
+                if (roomData && roomData.items && roomData.items !== "null"){
+                    if (!_rendered){
+                        _rendered = true;
+                        _renderer = PIXI.autoDetectRenderer(Consts.STAGE_WIDTH, Consts.STAGE_HEIGHT, {transparent: true} );
+                        $element.append(_renderer.view);
+                        // create the root of the scene graph
+                        _stage = new PIXI.Container();
+                        //specify display list component
+                        _stage.displayList = new PIXI.DisplayList();
+                        requestAnimationFrame(animate);
                     }
-                    requestAnimationFrame(animate);
-                    $rootScope.$broadcast('STAGE_CREATED', {
-                        items: _stageItems
-                    });*/
-
-
-
+                    updateStageState(roomData, reset);
+                }
             },
 
             generatedNewItem : function(item){

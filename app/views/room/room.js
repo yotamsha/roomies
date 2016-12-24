@@ -10,19 +10,23 @@ angular.module('myApp.room', ['ngRoute'])
         });
     }])
 
-    .controller('RoomCtrl', ['$scope', 'EngineService', '$firebaseObject', '$rootScope', 'RoomService',
-        function ($scope, EngineService, $firebaseObject, $rootScope, RoomService) {
+    .controller('RoomCtrl', ['$scope', 'EngineService', '$firebaseObject', '$rootScope', 'RoomService','$document',
+        function ($scope, EngineService, $firebaseObject, $rootScope, RoomService, $document) {
             var ctrl = this;
+            var $canvasElement = angular.element(document.getElementsByClassName('stage'));
             var Rooms = firebase.database().ref('roomies/rooms');
             ctrl.storageBasePath = "../../assets/images/furniture/";
+            ctrl.showRoomsPopupBox = false;
             function _init() {
                 ctrl.availableItems = RoomService.getItemsInventory();
                 ctrl.roomId = window.localStorage.roomId;
+                ctrl.isRoomOwned = true;
                 if (window.localStorage && window.localStorage.roomId) {
                     console.log("Loading data for room ID: ", window.localStorage.roomId);
                     RoomService.getRoom(window.localStorage.roomId).then(function (data) {
-                        $scope.roomData = data;
-                        $scope.$apply();
+                        EngineService.redrawChanges($canvasElement, data);
+                        /*                        $scope.roomData = data;
+                                                $scope.$apply();*/
                         console.log("RoomData loaded: ", data);
                     });
                 } else {
@@ -94,10 +98,14 @@ angular.module('myApp.room', ['ngRoute'])
                     var roomsData = snapshot.val();
                     // We should listen to when a child is changed, if it has the same ID as the one we are looking at
                     // then the change should immediately appear in the room.
-                    $scope.roomData = roomsData[ctrl.roomId];
-                    if(!$scope.$$phase) { // check that no digest is taking place.
-                        $scope.$apply();
+                    //$scope.roomData = roomsData[ctrl.roomId];
+                    if (roomsData[ctrl.roomId] && roomsData[ctrl.roomId].items){
+                        EngineService.redrawChanges($canvasElement, roomsData[ctrl.roomId]);
                     }
+                    ctrl.rooms = roomsData;
+/*                    if(!$scope.$$phase) { // check that no digest is taking place.
+                        $scope.$apply();
+                    }*/
 
                 });
             }
@@ -109,10 +117,21 @@ angular.module('myApp.room', ['ngRoute'])
             };
             ctrl.addItemToRoom = function(item) {
                 var newItem = EngineService.generatedNewItem(item);
-                // createStageItem(data.key, data.path, 100, 100, Consts.STAGE_WIDTH / 2, Consts.STAGE_HEIGHT / 2);
                 RoomService.addItem(ctrl.roomId, newItem).then(function(data){ // Add item on server
-                    //console.log(data);
-                    //EngineService.addItem(data);// Add item to stage
+                });
+            };
+            ctrl.showRoomsPopup = function(){
+                ctrl.showRoomsPopupBox = true;
+            };
+            ctrl.switchToRoom = function(roomId){
+                RoomService.getRoom(roomId).then(function (data) {
+                    // $scope.roomData = data;
+                    EngineService.redrawChanges($canvasElement, data, true);
+                    // $scope.$apply();
+                    console.log("RoomData loaded: ", data);
+                    ctrl.roomId = roomId;
+                    ctrl.isRoomOwned = roomId === window.localStorage.roomId;
+                    ctrl.showRoomsPopupBox = false;
 
                 });
 
